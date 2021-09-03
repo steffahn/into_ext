@@ -78,11 +78,7 @@
     variant_size_differences
 )]
 // reasonable rustdoc lints
-#![warn(
-    rustdoc::missing_crate_level_docs,
-    rustdoc::private_doc_tests,
-    rustdoc::invalid_html_tags
-)]
+#![warn(rustdoc::missing_crate_level_docs, rustdoc::private_doc_tests)]
 
 //! [![crates.io]](https://crates.io/crates/into_ext)
 //! [![github]](https://github.com/steffahn/into_ext)
@@ -100,20 +96,24 @@
 //!
 //! See [the documentation of `IntoExt::into_`][into_] for more details.
 //!
-//! [into_]: IntoExt::into_
+//! [into_]: IntoExt::into_ "IntoExt::into_"
 
 /// Extension trait for the [`Into`] trait, offering a method `.into_::<T>()` to specify the target
 /// type of conversion.
 pub trait IntoExt<T_>: Into<T_> {
-    /// Calling `foo.into()` using the standard library's [`Into`] trait can lead to ambiguities.
-    /// Some current workarounds to specify the target type `T` are to use `T::from(foo)`, or
-    /// `Into::<T>::into(foo)`. Both of these alternatives are interfering badly with postfix method
-    /// syntax; the former also doesn't support types that have a `S: Into<T>` but no `T: From<S>`
+    /// Calling <code>foo.[into]\()</code> using the standard library's [`Into`] trait can lead to
+    /// ambiguities. Some current workarounds to specify the target type `T` are to use
+    /// <code>T::[from]\(foo)</code>, or <code>[Into]::\<T>::[into]\(foo)</code>. Both of these
+    /// alternatives are interfering badly with postfix method syntax; the former also doesn't
+    /// support types that have a <code>S: [Into]\<T></code>> but no <code>T: [From]\<S></code>
     /// implementation.
+    ///
+    /// [from]: From::from "From::from"
+    /// [into]: Into::into "Into::into"
     ///
     /// With `IntoExt`, you can simply write `foo.into_::<T>()`.
     ///
-    /// The underscore at the end of the method name is to avoid collision with `Into::into`,
+    /// The underscore at the end of the method name is to avoid collision with [`Into::into`],
     /// and to indicate that the method is followed by additional information
     /// (i.e. a type parameter).
     ///
