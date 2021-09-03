@@ -7,8 +7,8 @@
 [![unsafe forbidden]](https://github.com/rust-secure-code/safety-dance/)
 
 [github]: https://img.shields.io/badge/github-steffahn/into__ext-yellowgreen.svg
-[crates.io]: https://img.shields.io/crates/v/into_ext.svg
-[MIT / Apache 2.0 licensed]: https://img.shields.io/crates/l/into_ext.svg
+[crates.io]: https://img.shields.io/crates/v/into_ext.svg?maxAge=86400
+[MIT / Apache 2.0 licensed]: https://img.shields.io/crates/l/into_ext.svg?maxAge=2592000
 [docs.rs]: https://docs.rs/into_ext/badge.svg
 [unsafe forbidden]: https://img.shields.io/badge/unsafe-forbidden-success.svg
 
