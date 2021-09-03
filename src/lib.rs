@@ -1,7 +1,8 @@
 #![no_std]
 #![forbid(unsafe_code)]
+// reasonable clippy categories
 #![warn(clippy::pedantic, clippy::nursery, clippy::cargo)]
-// reasonable restriction lints
+// reasonable clippy::restriction lints
 #![warn(
     clippy::clone_on_ref_ptr,
     clippy::float_arithmetic,
@@ -44,6 +45,13 @@
     unused_results,
     variant_size_differences
 )]
+// reasonable rustdoc lints
+#![warn(
+    rustdoc::missing_crate_level_docs,
+    rustdoc::missing_doc_code_examples,
+    rustdoc::private_doc_tests,
+    rustdoc::invalid_html_tags
+)]
 
 //! [![crates.io]](https://crates.io/crates/into_ext)
 //! [![github]](https://github.com/steffahn/into_ext)
@@ -59,7 +67,19 @@
 //! [docs.rs]: https://docs.rs/into_ext/badge.svg
 //! [unsafe forbidden]: https://img.shields.io/badge/unsafe-forbidden-success.svg
 
+/// Extension trait for the `Into` trait, offering a method `.into_::<T>()` to specify the target
+/// type of conversion.
 trait IntoExt<T0>: Into<T0> {
+    /// Calling `foo.into()` using the standard librarie's `Into` trait can lead to ambiguities.
+    /// Current workarounds to specify the target type `T` include using `T::from(foo)` or
+    /// `Into::<T>::into(foo)`. Both are interfering badly with postfix method syntax, the former
+    /// also doesn't support types that have a `S: Into<T>` but no `T: From<S>` implementation.
+    ///
+    /// ```
+    /// let x: u32 = u32::MAX;
+    /// // not let’s get x + 10 as an `u64`
+    /// let y = x.into_::<u64> + 10;
+    /// ```
     fn into_<T>(self) -> T {
         todo!()
     }
