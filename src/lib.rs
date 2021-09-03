@@ -104,7 +104,7 @@
 
 /// Extension trait for the [`Into`] trait, offering a method `.into_::<T>()` to specify the target
 /// type of conversion.
-pub trait IntoExt<T0>: Into<T0> {
+pub trait IntoExt<T_>: Into<T_> {
     /// Calling `foo.into()` using the standard library's [`Into`] trait can lead to ambiguities.
     /// Some current workarounds to specify the target type `T` are to use `T::from(foo)`, or
     /// `Into::<T>::into(foo)`. Both of these alternatives are interfering badly with postfix method
@@ -134,15 +134,54 @@ pub trait IntoExt<T0>: Into<T0> {
     /// ```
     fn into_<T>(self) -> T
     where
-        T: TypeIsEqual<To = T0>,
+        T: TypeIsEqual<To = T_>,
     {
-        todo!()
+        #[allow(clippy::missing_docs_in_private_items, clippy::missing_const_for_fn)]
+        fn helper<T>(val: <T as TypeIsEqual>::To) -> T {
+            val
+        }
+        helper(self.into())
     }
 }
 
-impl<S, T0> IntoExt<T0> for S where S: Into<T0> {}
+impl<S, T_> IntoExt<T_> for S where S: Into<T_> {}
 
+/// Helper trait for type equality, necessary to make [`IntoExt::into_`] work.
+///
+/// Generically implemented so that `T: TypeIsEqual<To = T>` holds for all types.
+///
+/// # Example
+///
+/// If you _have_ an `S: TypeIsEqual<To = T>` bound, this trait can be used by using a generic
+/// function with arguments or return values of type `S` and `<S as TypeIsEqual>::To`.
+///
+/// ```
+/// # use into_ext::TypeIsEqual;
+/// fn convert_one_way<S, T>(s: S) -> T
+/// where
+///     S: TypeIsEqual<To = T>,
+/// {
+///     fn helper<S>(s: S) -> <S as TypeIsEqual>::To {
+///         s
+///     }
+///     helper(s)
+/// }
+///
+/// fn convert_other_way<S, T>(t: T) -> S
+/// where
+///     S: TypeIsEqual<To = T>,
+/// {
+///     fn helper<S>(t: <S as TypeIsEqual>::To) -> S {
+///         t
+///     }
+///     helper(t)
+/// }
+/// ```
+/// The same works if the corresponding types are _part_ of a larger type, e.g. you can convert
+/// `&mut [Option<S>]` to `&mut [Option<T>]` and things like that.
 pub trait TypeIsEqual {
+    /// Two types being equal -- e.g. `S == T` -- is written as `S: TypeIsEqual<To = T>` with
+    /// this trait.
     type To: ?Sized;
 }
 impl<T: ?Sized> TypeIsEqual for T {
