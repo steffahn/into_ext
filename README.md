@@ -1,19 +1,19 @@
-# template_crate
+# into_ext
 
-[![docs.rs]](https://docs.rs/template_crate)
-[![crates.io]](https://crates.io/crates/template_crate)
-[![github]](https://github.com/steffahn/template_crate)
+[![docs.rs]](https://docs.rs/into_ext)
+[![crates.io]](https://crates.io/crates/into_ext)
+[![github]](https://github.com/steffahn/into_ext)
 [![MIT / Apache 2.0 licensed]](#License)
 [![unsafe forbidden]](https://github.com/rust-secure-code/safety-dance/)
 
-[github]: https://img.shields.io/badge/github-steffahn/template__crate-yellowgreen.svg
-[crates.io]: https://img.shields.io/crates/v/template_crate.svg
-[MIT / Apache 2.0 licensed]: https://img.shields.io/crates/l/template_crate.svg
-[docs.rs]: https://docs.rs/template_crate/badge.svg
+[github]: https://img.shields.io/badge/github-steffahn/into__ext-yellowgreen.svg
+[crates.io]: https://img.shields.io/crates/v/into_ext.svg
+[MIT / Apache 2.0 licensed]: https://img.shields.io/crates/l/into_ext.svg
+[docs.rs]: https://docs.rs/into_ext/badge.svg
 [unsafe forbidden]: https://img.shields.io/badge/unsafe-forbidden-success.svg
 
-
-README documentation goes here!!
+Extension trait for the `Into` trait, offering a method `.into_::<T>()` to specify the target
+type of conversion.
 
 ## License
 Licensed under either of
