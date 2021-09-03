@@ -12,8 +12,11 @@
 [docs.rs]: https://docs.rs/into_ext/badge.svg
 [unsafe forbidden]: https://img.shields.io/badge/unsafe-forbidden-success.svg
 
-Extension trait for the `Into` trait, offering a method `.into_::<T>()` to specify the target
+Extension trait for the [`Into`] trait, offering a method [`.into_::<T>()`] to specify the target
 type of conversion.
+
+[`Into`]: https://doc.rust-lang.org/nightly/core/convert/trait.Into.html "Into"
+[`.into_::<T>()`]: https://docs.rs/into_ext/0.1/into_ext/trait.IntoExt.html#method.into_ "IntoExt::into_"
 
 ## License
 Licensed under either of
