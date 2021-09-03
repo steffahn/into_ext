@@ -6,9 +6,9 @@ license = "MIT OR Apache-2.0"
 description = """
 Extension trait for the ‘Into’ trait, offering a method ‘.into_::<T>()’ to specify the target type of conversion.
 """
-repository = "https://github.com/steffahn/template_crate"
-homepage = "https://github.com/steffahn/template_crate"
-documentation = "https://docs.rs/template_crate"
+repository = "https://github.com/steffahn/into_ext"
+homepage = "https://github.com/steffahn/into_ext"
+documentation = "https://docs.rs/into_ext"
 keywords = ["into", "conversion"]
 categories = ["no-std", "rust-patterns"]
 readme = "README.md"
