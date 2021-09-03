@@ -28,7 +28,6 @@
     clippy::map_err_ignore,
     clippy::mem_forget,
     clippy::missing_docs_in_private_items,
-    clippy::missing_inline_in_public_items,
     clippy::modulo_arithmetic,
     clippy::multiple_inherent_impl,
     clippy::panic,
@@ -128,14 +127,24 @@ pub trait IntoExt<T0>: Into<T0> {
     /// // now, let’s get x + 10 as an `u64` (without using the `as` operator)
     /// let y = x.into_::<u64>() + 10;
     /// ```
-    /// The following wouldn't have worked
-    /// ```
+    /// whereas, e.g. the following wouldn't have worked
+    /// ```compile_fail
     /// let x: u32 = u32::MAX;
-    /// let y = x.into() + 10;
+    /// let y: u32 = x.into() + 10_u32;
     /// ```
-    fn into_<T>(self) -> T {
+    fn into_<T>(self) -> T
+    where
+        T: TypeIsEqual<To = T0>,
+    {
         todo!()
     }
 }
 
 impl<S, T0> IntoExt<T0> for S where S: Into<T0> {}
+
+pub trait TypeIsEqual {
+    type To: ?Sized;
+}
+impl<T: ?Sized> TypeIsEqual for T {
+    type To = Self;
+}
