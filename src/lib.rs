@@ -50,7 +50,7 @@
     clippy::unwrap_used,
     clippy::use_debug,
     clippy::verbose_file_reads,
-    clippy::wildcard_enum_match_arm,
+    clippy::wildcard_enum_match_arm
 )]
 // reasonable rustc lints
 #![warn(
@@ -81,7 +81,6 @@
 // reasonable rustdoc lints
 #![warn(
     rustdoc::missing_crate_level_docs,
-    rustdoc::missing_doc_code_examples,
     rustdoc::private_doc_tests,
     rustdoc::invalid_html_tags
 )]
@@ -91,29 +90,52 @@
 //! [![MIT / Apache 2.0 licensed]](https://github.com/steffahn/into_ext#License)
 //! [![unsafe forbidden]](https://github.com/rust-secure-code/safety-dance/)
 //!
-//! Extension trait for the `Into` trait, offering a method `.into_::<T>()` to specify the target
-//! type of conversion.
-//!
 //! [github]: https://img.shields.io/badge/github-steffahn/into__ext-yellowgreen.svg
 //! [crates.io]: https://img.shields.io/crates/v/into_ext.svg
 //! [MIT / Apache 2.0 licensed]: https://img.shields.io/crates/l/into_ext.svg
 //! [docs.rs]: https://docs.rs/into_ext/badge.svg
 //! [unsafe forbidden]: https://img.shields.io/badge/unsafe-forbidden-success.svg
+//!
+//! This crate offers an extension trait [`IntoExt`] for the [`Into`] trait from the standard
+//! library, offering a method [`.into_::<T>()`][into_] to specify the target type of conversion.
+//!
+//! See [the documentation of `IntoExt::into_`][into_] for more details.
+//!
+//! [into_]: IntoExt::into_
 
-/// Extension trait for the `Into` trait, offering a method `.into_::<T>()` to specify the target
+/// Extension trait for the [`Into`] trait, offering a method `.into_::<T>()` to specify the target
 /// type of conversion.
-trait IntoExt<T0>: Into<T0> {
-    /// Calling `foo.into()` using the standard librarie's `Into` trait can lead to ambiguities.
-    /// Current workarounds to specify the target type `T` include using `T::from(foo)` or
-    /// `Into::<T>::into(foo)`. Both are interfering badly with postfix method syntax, the former
-    /// also doesn't support types that have a `S: Into<T>` but no `T: From<S>` implementation.
+pub trait IntoExt<T0>: Into<T0> {
+    /// Calling `foo.into()` using the standard library's [`Into`] trait can lead to ambiguities.
+    /// Some current workarounds to specify the target type `T` are to use `T::from(foo)`, or
+    /// `Into::<T>::into(foo)`. Both of these alternatives are interfering badly with postfix method
+    /// syntax; the former also doesn't support types that have a `S: Into<T>` but no `T: From<S>`
+    /// implementation.
     ///
+    /// With `IntoExt`, you can simply write `foo.into_::<T>()`.
+    ///
+    /// The underscore at the end of the method name is to avoid collision with `Into::into`,
+    /// and to indicate that the method is followed by additional information
+    /// (i.e. a type parameter).
+    ///
+    /// # Example
+    /// ```
+    /// use into_ext::IntoExt;
+    ///
+    /// // here’s a big `u32` value, called ‘x’
+    /// let x: u32 = u32::MAX;
+    ///
+    /// // now, let’s get x + 10 as an `u64` (without using the `as` operator)
+    /// let y = x.into_::<u64>() + 10;
+    /// ```
+    /// The following wouldn't have worked
     /// ```
     /// let x: u32 = u32::MAX;
-    /// // not let’s get x + 10 as an `u64`
-    /// let y = x.into_::<u64> + 10;
+    /// let y = x.into() + 10;
     /// ```
     fn into_<T>(self) -> T {
         todo!()
     }
 }
+
+impl<S, T0> IntoExt<T0> for S where S: Into<T0> {}
