@@ -11,6 +11,6 @@
 //!
 //! [github]: https://img.shields.io/badge/github-steffahn/template__crate-yellowgreen.svg
 //! [crates.io]: https://img.shields.io/crates/v/template_crate.svg
-//! [MIT / Apache 2.0 licensed]: https://img.shields.io/crates/l/replace_with.svg
+//! [MIT / Apache 2.0 licensed]: https://img.shields.io/crates/l/template_crate.svg
 //! [docs.rs]: https://docs.rs/template_crate/badge.svg
 //! [unsafe forbidden]: https://img.shields.io/badge/unsafe-forbidden-success.svg
