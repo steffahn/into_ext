@@ -124,7 +124,7 @@ pub trait IntoExt<T_>: Into<T_> {
     /// // here’s a big `u32` value, called ‘x’
     /// let x: u32 = u32::MAX;
     ///
-    /// // now, let’s get x + 10 as an `u64` (without using the `as` operator)
+    /// // now, let’s get x + 10 as a `u64` (without using the `as` operator)
     /// let y = x.into_::<u64>() + 10;
     /// ```
     /// whereas, e.g. the following wouldn't have worked
