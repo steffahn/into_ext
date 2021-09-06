@@ -94,11 +94,13 @@
 //! [unsafe forbidden]: https://img.shields.io/badge/unsafe-forbidden-success.svg
 //!
 //! This crate offers an extension trait [`IntoExt`] for the [`Into`] trait from the standard
-//! library, offering a method [`.into_::<T>()`][into_] to specify the target type of conversion.
+//! library, offering a method [`.into_::<T>()`][IntoExt::into_] to specify the target type of
+//! conversion.
 //!
-//! See [the documentation of `IntoExt::into_`][into_] for more details.
+//! It also comes with a similar extension trait [`TryIntoExt`] for [`TryInto`].
 //!
-//! [into_]: IntoExt::into_ "IntoExt::into_"
+//! See the documentation of [`IntoExt::into_`] or [`TryIntoExt::try_into_`] for more
+//! details.
 
 use core::convert::TryInto;
 
