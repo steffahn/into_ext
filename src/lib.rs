@@ -106,6 +106,8 @@ use core::convert::TryInto;
 
 /// Extension trait for the [`Into`] trait, offering a method `.into_::<T>()` to specify the target
 /// type of conversion.
+///
+/// See also [`TryIntoExt`] for an extension trait of the fallible alternative to [`Into`].
 pub trait IntoExt<T_>: Into<T_> {
     /// Calling <code>foo.[into]\()</code> using the standard library's [`Into`] trait can lead to
     /// ambiguities. Some current workarounds to specify the target type `T` are to use
@@ -154,6 +156,8 @@ impl<S, T_> IntoExt<T_> for S where S: Into<T_> {}
 
 /// Extension trait for the [`TryInto`] trait, offering a method `.try_into_::<T>()` to specify the target
 /// type of conversion.
+///
+/// See also [`IntoExt`] for an extension trait of the infallible alternative to [`TryInto`].
 pub trait TryIntoExt<T_>: TryInto<T_> {
     #[allow(clippy::missing_errors_doc)]
     /// Calling <code>foo.[try_into]\()</code> using the standard library's [`TryInto`] trait can lead to
