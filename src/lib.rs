@@ -244,3 +244,27 @@ pub trait TypeIsEqual {
 impl<T: ?Sized> TypeIsEqual for T {
     type To = Self;
 }
+
+/// The `into_ext` prelude
+///
+/// The prelude re-exports the most commonly used traits from this crate as well as related
+/// standard library traits lacking from the Rust 2018 edition prelude.
+///
+/// # Example
+/// ```
+/// # use core::num::NonZeroU8;
+/// use into_ext::prelude::*;
+///
+/// let x = 42_i32;
+/// let y = x.into_::<Option<i32>>();
+/// let z = x.try_into_::<u8>()?;
+/// # Ok::<(), core::num::TryFromIntError>(())
+/// ```
+pub mod prelude {
+    pub use crate::IntoExt;
+    pub use crate::TryIntoExt;
+    #[doc(no_inline)]
+    pub use core::convert::TryFrom;
+    #[doc(no_inline)]
+    pub use core::convert::TryInto;
+}
