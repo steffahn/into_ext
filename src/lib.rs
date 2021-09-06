@@ -226,6 +226,21 @@ pub trait AsRefExt<T_>: AsRef<T_> {
 
 impl<S: ?Sized, T_> AsRefExt<T_> for S where S: AsRef<T_> {}
 
+pub trait AsMutExt<T_>: AsMut<T_> {
+    fn as_mut_<T>(&mut self) -> &mut T
+    where
+        T: TypeIsEqual<To = T_>,
+    {
+        #[allow(clippy::missing_docs_in_private_items)]
+        fn helper<T>(this: &mut (impl AsMut<<T as TypeIsEqual>::To> + ?Sized)) -> &mut T {
+            this.as_mut()
+        }
+        helper(self)
+    }
+}
+
+impl<S: ?Sized, T_> AsMutExt<T_> for S where S: AsMut<T_> {}
+
 /// Helper trait for type equality, necessary to make [`IntoExt::into_`] work.
 ///
 /// Generically implemented so that `T: TypeIsEqual<To = T>` holds for all types.
