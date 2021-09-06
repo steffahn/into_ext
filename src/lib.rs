@@ -211,6 +211,21 @@ pub trait TryIntoExt<T_>: TryInto<T_> {
 
 impl<S, T_> TryIntoExt<T_> for S where S: TryInto<T_> {}
 
+pub trait AsRefExt<T_>: AsRef<T_> {
+    fn as_ref_<T>(&self) -> &T
+    where
+        T: TypeIsEqual<To = T_>,
+    {
+        #[allow(clippy::missing_docs_in_private_items)]
+        fn helper<T>(this: &(impl AsRef<<T as TypeIsEqual>::To> + ?Sized)) -> &T {
+            this.as_ref()
+        }
+        helper(self)
+    }
+}
+
+impl<S: ?Sized, T_> AsRefExt<T_> for S where S: AsRef<T_> {}
+
 /// Helper trait for type equality, necessary to make [`IntoExt::into_`] work.
 ///
 /// Generically implemented so that `T: TypeIsEqual<To = T>` holds for all types.
