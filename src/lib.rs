@@ -79,6 +79,8 @@
 )]
 // reasonable rustdoc lints
 #![warn(rustdoc::missing_crate_level_docs, rustdoc::private_doc_tests)]
+// false positives with <code> blocks
+#![allow(clippy::doc_markdown)]
 
 //! [![crates.io]](https://crates.io/crates/into_ext)
 //! [![github]](https://github.com/steffahn/into_ext)
@@ -97,6 +99,8 @@
 //! See [the documentation of `IntoExt::into_`][into_] for more details.
 //!
 //! [into_]: IntoExt::into_ "IntoExt::into_"
+
+use core::convert::TryInto;
 
 /// Extension trait for the [`Into`] trait, offering a method `.into_::<T>()` to specify the target
 /// type of conversion.
@@ -145,6 +149,59 @@ pub trait IntoExt<T_>: Into<T_> {
 }
 
 impl<S, T_> IntoExt<T_> for S where S: Into<T_> {}
+
+/// Extension trait for the [`TryInto`] trait, offering a method `.try_into_::<T>()` to specify the target
+/// type of conversion.
+pub trait TryIntoExt<T_>: TryInto<T_> {
+    #[allow(clippy::missing_errors_doc)]
+    /// Calling <code>foo.[try_into]\()</code> using the standard library's [`TryInto`] trait can lead to
+    /// ambiguities. Some current workarounds to specify the target type `T` are to use
+    /// <code>T::[try_from]\(foo)</code>, or <code>[TryInto]::\<T>::[try_into]\(foo)</code>. Both of these
+    /// alternatives are interfering badly with postfix method syntax; the former also doesn't
+    /// support types that have a <code>S: [TryInto]\<T></code>> but no
+    /// <code>T: [TryFrom](core::convert::TryFrom)\<S></code> implementation.
+    ///
+    /// [try_from]: core::convert::From::from "From::from"
+    /// [try_into]: core::convert::TryInto::try_into "Into::into"
+    ///
+    /// With `TryIntoExt`, you can simply write `foo.try_into_::<T>()`.
+    ///
+    /// The underscore at the end of the method name is to avoid collision with
+    /// [`TryInto::try_into`], and to indicate that the method is followed by additional information
+    /// (i.e. a type parameter).
+    ///
+    /// # Example
+    /// ```
+    /// use into_ext::TryIntoExt;
+    ///
+    /// // here’s a small `u64` value, called ‘x’
+    /// let x: u64 = 1;
+    ///
+    /// // now, let’s get x - 10 as a `i32` (without using the `as` operator)
+    /// let y = x.try_into_::<i32>()? - 10;
+    /// # Ok::<(), core::num::TryFromIntError>(())
+    /// ```
+    /// whereas, e.g. the following wouldn't have worked
+    /// ```compile_fail
+    /// use core::convert::TryInto;
+    ///
+    /// let x: u64 = 1;
+    /// let y: i32 = x.try_into()? - 10_i32;
+    /// # Ok::<(), core::num::TryFromIntError>(())
+    /// ```
+    fn try_into_<T>(self) -> Result<T, Self::Error>
+    where
+        T: TypeIsEqual<To = T_>,
+    {
+        #[allow(clippy::missing_docs_in_private_items, clippy::missing_const_for_fn)]
+        fn helper<T, E>(val: Result<<T as TypeIsEqual>::To, E>) -> Result<T, E> {
+            val
+        }
+        helper(self.try_into())
+    }
+}
+
+impl<S, T_> TryIntoExt<T_> for S where S: TryInto<T_> {}
 
 /// Helper trait for type equality, necessary to make [`IntoExt::into_`] work.
 ///
