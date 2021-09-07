@@ -211,35 +211,35 @@ pub trait TryIntoExt<T_>: TryInto<T_> {
 
 impl<S, T_> TryIntoExt<T_> for S where S: TryInto<T_> {}
 
-pub trait AsRefExt<T_>: AsRef<T_> {
-    fn as_ref_<T>(&self) -> &T
+pub trait AsRefExt<T_: ?Sized>: AsRef<T_> {
+    fn as_ref_<T: ?Sized>(&self) -> &T
     where
         T: TypeIsEqual<To = T_>,
     {
         #[allow(clippy::missing_docs_in_private_items)]
-        fn helper<T>(this: &(impl AsRef<<T as TypeIsEqual>::To> + ?Sized)) -> &T {
+        fn helper<T: ?Sized>(this: &(impl AsRef<<T as TypeIsEqual>::To> + ?Sized)) -> &T {
             this.as_ref()
         }
         helper(self)
     }
 }
 
-impl<S: ?Sized, T_> AsRefExt<T_> for S where S: AsRef<T_> {}
+impl<S: ?Sized, T_: ?Sized> AsRefExt<T_> for S where S: AsRef<T_> {}
 
-pub trait AsMutExt<T_>: AsMut<T_> {
-    fn as_mut_<T>(&mut self) -> &mut T
+pub trait AsMutExt<T_: ?Sized>: AsMut<T_> {
+    fn as_mut_<T: ?Sized>(&mut self) -> &mut T
     where
         T: TypeIsEqual<To = T_>,
     {
         #[allow(clippy::missing_docs_in_private_items)]
-        fn helper<T>(this: &mut (impl AsMut<<T as TypeIsEqual>::To> + ?Sized)) -> &mut T {
+        fn helper<T: ?Sized>(this: &mut (impl AsMut<<T as TypeIsEqual>::To> + ?Sized)) -> &mut T {
             this.as_mut()
         }
         helper(self)
     }
 }
 
-impl<S: ?Sized, T_> AsMutExt<T_> for S where S: AsMut<T_> {}
+impl<S: ?Sized, T_: ?Sized> AsMutExt<T_> for S where S: AsMut<T_> {}
 
 /// Helper trait for type equality, necessary to make [`IntoExt::into_`] work.
 ///
