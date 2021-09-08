@@ -1,5 +1,6 @@
 #![no_std]
 #![forbid(unsafe_code)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 // reasonable clippy categories
 #![warn(clippy::pedantic, clippy::nursery, clippy::cargo)]
 // reasonable clippy::restriction lints
@@ -226,6 +227,8 @@ pub trait AsRefExt<T_: ?Sized>: AsRef<T_> {
 
 impl<S: ?Sized, T_: ?Sized> AsRefExt<T_> for S where S: AsRef<T_> {}
 
+#[cfg(feature = "more_traits")]
+#[cfg_attr(docsrs, doc(cfg(feature = "more_traits")))]
 pub trait AsMutExt<T_: ?Sized>: AsMut<T_> {
     fn as_mut_<T: ?Sized>(&mut self) -> &mut T
     where
@@ -239,6 +242,7 @@ pub trait AsMutExt<T_: ?Sized>: AsMut<T_> {
     }
 }
 
+#[cfg(feature = "more_traits")]
 impl<S: ?Sized, T_: ?Sized> AsMutExt<T_> for S where S: AsMut<T_> {}
 
 /// Helper trait for type equality, necessary to make [`IntoExt::into_`] work.
