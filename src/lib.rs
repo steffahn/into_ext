@@ -309,4 +309,6 @@ pub mod prelude {
     pub use core::convert::TryFrom;
     #[doc(no_inline)]
     pub use core::convert::TryInto;
+
+    pub use crate::AsRefExt;
 }
