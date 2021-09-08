@@ -1,4 +1,4 @@
-#![no_std]
+#![cfg_attr(not(any(test, docsrs)), no_std)]
 #![forbid(unsafe_code)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 // reasonable clippy categories
@@ -192,7 +192,7 @@ pub trait TryIntoExt<T_>: TryInto<T_> {
     /// ```
     /// whereas, e.g. the following wouldn't have worked
     /// ```compile_fail
-    /// use core::convert::TryInto;
+    /// use std::convert::TryInto;
     ///
     /// let x: u64 = 1;
     /// let y: i32 = x.try_into()? - 10_i32;
@@ -213,6 +213,17 @@ pub trait TryIntoExt<T_>: TryInto<T_> {
 impl<S, T_> TryIntoExt<T_> for S where S: TryInto<T_> {}
 
 pub trait AsRefExt<T_: ?Sized>: AsRef<T_> {
+    /// ```
+    /// use into_ext::AsRefExt;
+    /// use std::path::{Component, Path};
+    /// let c = "/home/ferris/.cargo/bin/rg"
+    ///     .as_ref_::<Path>()
+    ///     .components()
+    ///     .map(Component::as_os_str)
+    ///     .collect::<Vec<_>>();
+    /// assert_eq!(c, &["/", "home", "ferris", ".cargo", "bin", "rg"]);
+    /// ```
+
     fn as_ref_<T: ?Sized>(&self) -> &T
     where
         T: TypeIsEqual<To = T_>,
@@ -294,12 +305,14 @@ impl<T: ?Sized> TypeIsEqual for T {
 ///
 /// # Example
 /// ```
-/// # use core::num::NonZeroU8;
+/// # use std::num::NonZeroU8;
+/// # use std::path::Path;
 /// use into_ext::prelude::*;
 ///
 /// let x = 42_i32;
 /// let y = x.into_::<Option<i32>>();
 /// let z = x.try_into_::<u8>()?;
+/// let p = "/home".as_ref_::<Path>();
 /// # Ok::<(), core::num::TryFromIntError>(())
 /// ```
 pub mod prelude {
