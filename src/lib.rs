@@ -256,6 +256,47 @@ pub trait AsMutExt<T_: ?Sized>: AsMut<T_> {
 #[cfg(feature = "more_traits")]
 impl<S: ?Sized, T_: ?Sized> AsMutExt<T_> for S where S: AsMut<T_> {}
 
+#[cfg(feature = "more_traits")]
+use core::borrow::{Borrow, BorrowMut};
+
+#[cfg(feature = "more_traits")]
+#[cfg_attr(docsrs, doc(cfg(feature = "more_traits")))]
+pub trait BorrowExt<T_: ?Sized>: Borrow<T_> {
+    fn borrow_<T: ?Sized>(&self) -> &T
+    where
+        T: TypeIsEqual<To = T_>,
+    {
+        #[allow(clippy::missing_docs_in_private_items)]
+        fn helper<T: ?Sized>(this: &(impl Borrow<<T as TypeIsEqual>::To> + ?Sized)) -> &T {
+            this.borrow()
+        }
+        helper(self)
+    }
+}
+
+#[cfg(feature = "more_traits")]
+impl<S: ?Sized, T_: ?Sized> BorrowExt<T_> for S where S: Borrow<T_> {}
+
+#[cfg(feature = "more_traits")]
+#[cfg_attr(docsrs, doc(cfg(feature = "more_traits")))]
+pub trait BorrowMutExt<T_: ?Sized>: BorrowMut<T_> {
+    fn borrow_mut_<T: ?Sized>(&mut self) -> &mut T
+    where
+        T: TypeIsEqual<To = T_>,
+    {
+        #[allow(clippy::missing_docs_in_private_items)]
+        fn helper<T: ?Sized>(
+            this: &mut (impl BorrowMut<<T as TypeIsEqual>::To> + ?Sized),
+        ) -> &mut T {
+            this.borrow_mut()
+        }
+        helper(self)
+    }
+}
+
+#[cfg(feature = "more_traits")]
+impl<S: ?Sized, T_: ?Sized> BorrowMutExt<T_> for S where S: BorrowMut<T_> {}
+
 /// Helper trait for type equality, necessary to make [`IntoExt::into_`] work.
 ///
 /// Generically implemented so that `T: TypeIsEqual<To = T>` holds for all types.
@@ -316,12 +357,31 @@ impl<T: ?Sized> TypeIsEqual for T {
 /// # Ok::<(), core::num::TryFromIntError>(())
 /// ```
 pub mod prelude {
-    pub use crate::IntoExt;
-    pub use crate::TryIntoExt;
-    #[doc(no_inline)]
-    pub use core::convert::TryFrom;
-    #[doc(no_inline)]
-    pub use core::convert::TryInto;
+    #[cfg(not(doctest))]
+    use crate as into_ext;
+    macro_rules! core {
+        ($($path:tt)*) => {
+            #[cfg(not(docsrs))]
+            #[doc(no_inline)]
+            pub use core::$($path)*;
+            #[cfg(docsrs)]
+            #[doc(no_inline)]
+            pub use std::$($path)*;
+        }
+    }
+    pub use into_ext::IntoExt;
+    pub use into_ext::TryIntoExt;
+    core! {convert::TryFrom}
+    core! {convert::TryInto}
 
-    pub use crate::AsRefExt;
+    #[cfg(feature = "more_traits")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "more_traits")))]
+    pub use into_ext::AsMutExt;
+    pub use into_ext::AsRefExt;
+    #[cfg(feature = "more_traits")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "more_traits")))]
+    pub use into_ext::BorrowExt;
+    #[cfg(feature = "more_traits")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "more_traits")))]
+    pub use into_ext::BorrowMutExt;
 }
